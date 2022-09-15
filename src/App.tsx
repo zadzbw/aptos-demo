@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react'
+import Header from './components/Header'
+import Button from './components/Button'
 
 function App() {
+  const [address, setAddress] = useState<string | null>(null)
+  const [isConnected, setIsConnected] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (isConnected) {
+      window?.aptos.account().then((data: any) => {
+        setAddress(data.address)
+      })
+    } else {
+      setAddress(null)
+    }
+  }, [isConnected])
+
+  const checkIsConnected = async () => {
+    const x = await window.aptos.isConnected()
+    setIsConnected(x)
+  }
+
+  const handleConnect = async () => {
+    try {
+      console.log(await window.aptos.connect())
+      checkIsConnected()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleDisconnect = async () => {
+    await window.aptos.disconnect()
+    checkIsConnected()
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <Header/>
+      <div className={'p-4'}>
+        <pre>address: {address}</pre>
+        <pre>isConnected: {`${isConnected}`}</pre>
+
+        <Button onClick={handleConnect}>connect</Button>
+        <Button onClick={handleDisconnect}>disconnect</Button>
+      </div>
+    </>
+  )
 }
 
-export default App;
+export default App
