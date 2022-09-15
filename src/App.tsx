@@ -108,7 +108,7 @@ function App() {
       <div className={'p-4'}>
         <pre>address: {address}</pre>
         <pre>isConnected: {`${isConnected}`}</pre>
-        <pre>account: {account?.sequence_number}</pre>
+        <pre>account: {JSON.stringify(account)}</pre>
         {hasModule ? (
           <form onSubmit={handleSubmit}>
             <textarea ref={ref} defaultValue={message}/>
