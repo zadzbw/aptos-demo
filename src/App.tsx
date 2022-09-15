@@ -23,7 +23,8 @@ function App() {
 
   const handleConnect = async () => {
     try {
-      console.log(await window.aptos.connect())
+      const connectStatus = await window.aptos.connect()
+      console.log(connectStatus)
       checkIsConnected()
     } catch (e) {
       console.log(e)
